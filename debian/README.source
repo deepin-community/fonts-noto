@@ -1,0 +1,15 @@
+Getting new upstream release
+----------------------------
+
+Upstream only tags "most notable releases" as releases with inconsistent
+tag naming: <https://github.com/googlei18n/noto-fonts/releases>.
+
+Package releases are therefore time-based, linked to upstream git hash.
+
+Example:
+
+        wget --output-document=../fonts-noto_20200323.orig.tar.gz https://github.com/googlei18n/noto-fonts/archive/115d384.tar.gz
+        gbp import-orig --upstream-vcs-tag=115d384 ../fonts-noto_20200323.orig.tar.gz
+
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 26 Mar 2020 01:33:53 +0100

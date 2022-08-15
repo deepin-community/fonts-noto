@@ -1,0 +1,283 @@
+Source: fonts-noto
+Priority: optional
+Section: fonts
+Build-Depends:
+ cdbs,
+ debhelper,
+ lcdf-typetools,
+Maintainer: Deepin Developer <deepin-dev@deepin.org>
+Uploaders: Deepin Packages Builder <packages@deepin.org>
+ Jonas Smedegaard <dr@jones.dk>,
+ Vasudev Kamath <vasudev@copyninja.info>,
+Standards-Version: 4.5.0
+Homepage: https://www.google.com/get/noto/
+#Vcs-Git
+#Vcs-Browser
+Rules-Requires-Root: no
+
+Package: fonts-noto
+Section: metapackages
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ fonts-noto-core,
+ ${misc:Depends},
+Recommends:
+ fonts-noto-cjk,
+ fonts-noto-cjk-extra,
+ fonts-noto-color-emoji,
+ fonts-noto-extra,
+ fonts-noto-mono,
+ fonts-noto-ui-core,
+ fonts-noto-ui-extra,
+ fonts-noto-unhinted,
+Description: metapackage to pull in all Noto fonts
+ Noto is a collection of font families,
+ each visually harmonized across scripts.
+ .
+ Use this package if you want all Noto fonts.
+ .
+ The name "Noto" is short for "No Tofu",
+ describing the aim of covering all living Unicode scripts
+ (currently ${fonts:scriptcount} are covered, at least partly.
+ .
+ Tofu (豆腐) is Japanese jargon
+ for unicode replacement character "�" (U+FFFD)
+ often displayed as replacement for unassigned or unknown characters.
+
+Package: fonts-noto-core
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends},
+Breaks:
+ fonts-noto (<< 2015-05-11+cjk-1~),
+ fonts-noto-hinted (<< 20181130-2~),
+ fonts-noto-unhinted (<< 20201027-1~),
+Replaces:
+ fonts-noto (<< 2015-05-11+cjk-1~),
+ fonts-noto-hinted (<< 20181130-2~),
+ fonts-noto-unhinted (<< 20201027-1~),
+Description: "No Tofu" font families with large Unicode coverage (core)
+ Noto is a collection of font families,
+ each visually harmonized across scripts.
+ .
+ This package contains core weights for these Noto font families:
+ .
+ ${fonts:familylist}
+ .
+ The name "Noto" is short for "No Tofu",
+ describing the aim of covering all living Unicode scripts
+ (currently ${fonts:scriptcount} are covered, at least partly.
+ .
+ Tofu (豆腐) is Japanese jargon
+ for unicode replacement character "�" (U+FFFD)
+ often displayed as replacement for unassigned or unknown characters.
+
+Package: fonts-noto-extra
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends},
+Breaks:
+ fonts-noto-unhinted (<< 20201027-1~),
+Replaces:
+ fonts-noto-unhinted (<< 20201027-1~),
+Enhances:
+ fonts-noto-core,
+ fonts-noto-mono,
+Description: "No Tofu" font families with large Unicode coverage (extra)
+ Noto is a collection of font families,
+ each visually harmonized across scripts.
+ .
+ This package contains extra weights for these Noto font families:
+ .
+ ${fonts:familylist}
+ .
+ The name "Noto" is short for "No Tofu",
+ describing the aim of covering all living Unicode scripts
+ (currently ${fonts:scriptcount} are covered, at least partly.
+ .
+ Tofu (豆腐) is Japanese jargon
+ for unicode replacement character "�" (U+FFFD)
+ often displayed as replacement for unassigned or unknown characters.
+
+Package: fonts-noto-ui-core
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends},
+Suggests:
+ fonts-noto-core,
+Breaks:
+ fonts-noto (<< 2015-05-11+cjk-1~),
+ fonts-noto-hinted (<< 20181130-2~),
+ fonts-noto-unhinted (<< 20181227-2~),
+Replaces:
+ fonts-noto (<< 2015-05-11+cjk-1~),
+ fonts-noto-hinted (<< 20181130-2~),
+ fonts-noto-unhinted (<< 20181227-2~),
+Description: "No Tofu" font families with large Unicode coverage (UI core)
+ Noto is a collection of font families,
+ each visually harmonized across scripts.
+ .
+ This package contains core weights for these Noto UI font families:
+ .
+ ${fonts:familylist}
+ .
+ Noto UI fonts are for text display in UI elements
+ (e.g. buttons, menus) that have a height limit.
+ .
+ The name "Noto" is short for "No Tofu",
+ describing the aim of covering all living Unicode scripts.
+ .
+ Tofu (豆腐) is Japanese jargon
+ for unicode replacement character "�" (U+FFFD)
+ often displayed as replacement for unassigned or unknown characters.
+
+Package: fonts-noto-ui-extra
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends},
+Suggests:
+ fonts-noto-extra,
+Breaks:
+ fonts-noto-unhinted (<< 20201027-1~),
+Replaces:
+ fonts-noto-unhinted (<< 20201027-1~),
+Enhances:
+ fonts-noto-ui-core,
+Description: "No Tofu" font families with large Unicode coverage (UI extra)
+ Noto is a collection of font families,
+ each visually harmonized across scripts.
+ .
+ This package contains extra weights for these Noto UI font families:
+ .
+ ${fonts:familylist}
+ .
+ Noto UI fonts are for text display in UI elements
+ (e.g. buttons, menus) that have a height limit.
+ .
+ The name "Noto" is short for "No Tofu",
+ describing the aim of covering all living Unicode scripts.
+ .
+ Tofu (豆腐) is Japanese jargon
+ for unicode replacement character "�" (U+FFFD)
+ often displayed as replacement for unassigned or unknown characters.
+
+Package: fonts-noto-hinted-udeb
+Package-Type: udeb
+Section: debian-installer
+Architecture: all
+Depends:
+ ${misc:Depends},
+Description: "No Tofu" font families with large Unicode coverage (d-i default)
+ Noto is a collection of font families,
+ each visually harmonized across scripts.
+ .
+ This package contains Noto font families
+ used by default with the GTK frontend of debian-installer.
+
+Package: fonts-noto-unhinted
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends},
+Enhances:
+ fonts-croscore,
+ fonts-noto-core,
+ fonts-noto-extra,
+ fonts-noto-mono,
+Description: "No Tofu" font families with large Unicode coverage (unhinted)
+ Noto is a collection of font families,
+ each visually harmonized across scripts.
+ .
+ This package contains Noto font families which lacks hinting:
+ .
+ [ currently this package is empty: all Noto families has hinting ]
+ .
+ The name "Noto" is short for "No Tofu",
+ describing the aim of covering all living Unicode scripts
+ (currently ${fonts:scriptcount} are covered, at least partly.
+ .
+ Tofu (豆腐) is Japanese jargon
+ for unicode replacement character "�" (U+FFFD)
+ often displayed as replacement for unassigned or unknown characters.
+
+Package: fonts-noto-unhinted-udeb
+Package-Type: udeb
+Section: debian-installer
+Architecture: all
+Depends:
+ ${misc:Depends},
+Description: "No Tofu" font families with large Unicode coverage (d-i optional)
+ Noto is a collection of font families,
+ each visually harmonized across scripts.
+ .
+ This package contains Noto font families
+ optionally usable with the GTK frontend of debian-installer.
+
+Package: fonts-noto-mono
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends},
+Breaks:
+ fonts-noto-core (<< 20201027-2~),
+ fonts-noto-unhinted (<< 20201027-3~),
+Replaces:
+ fonts-noto-core (<< 20201027-2~),
+ fonts-noto-unhinted (<< 20201027-3~),
+Enhances:
+ fonts-noto-core,
+Description: "No Tofu" monospaced font family with large Unicode coverage
+ Noto is a collection of font families,
+ each visually harmonized across scripts.
+ .
+ This package contains Noto Mono font family
+ (formerly known as Droid Mono),
+ and core weights for the Noto Sans Mono font family.
+ Beware that Noto Mono has a much smaller repertoire
+ than Noto Sans or Noto Serif.
+ .
+ The name "Noto" is short for "No Tofu",
+ describing the aim of covering all living Unicode scripts.
+ .
+ Tofu (豆腐) is Japanese jargon
+ for unicode replacement character "�" (U+FFFD)
+ often displayed as replacement for unassigned or unknown characters.
+
+Package: fonts-croscore
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends},
+Suggests:
+ fonts-crosextra-caladea,
+ fonts-crosextra-carlito,
+Description: width-compatible fonts for improved on-screen readability
+ This package contains a collections of fonts
+ that offers improved on-screen readability characteristics
+ and the pan-European WGL character set
+ and solves the needs of developers looking for width-compatible fonts
+ to address document portability across platforms.
+ .
+ Arimo, Cousine and Tinos were designed by Steve Matteson
+ as innovative and refreshing designs
+ that are metrically compatible with Arial, Courier New
+ and Times New Roman, respectively.
+
+Package: fonts-noto-hinted
+Section: oldlibs
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ fonts-noto-core,
+ fonts-noto-ui-core,
+Description: obsolete metapackage to pull in a subset of Noto fonts
+ This is an obsolete metapackage
+ to install a subset of Noto fonts.
+ .
+ NB! This package is obsolete.
+ Please use appropriate other fonts-noto-* packages instead.

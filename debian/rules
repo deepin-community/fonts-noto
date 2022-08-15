@@ -1,0 +1,105 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+pkg = $(DEB_SOURCE_PACKAGE)
+pkg-mono = $(pkg)-mono
+pkg-core = $(pkg)-core
+pkg-extra = $(pkg)-extra
+pkg-ui-core = $(pkg)-ui-core
+pkg-ui-extra = $(pkg)-ui-extra
+pkg-udeb-di = $(pkg)-hinted-udeb
+pkg-nothinted = $(pkg)-unhinted
+pkg-udeb-extra = $(pkg)-unhinted-udeb
+pkg-croscore = fonts-croscore
+
+DEB_UPSTREAM_URL = https://github.com/googlei18n/noto-fonts/archive
+DEB_UPSTREAM_PACKAGE = NotoFonts-hinted
+DEB_UPSTREAM_TARBALL_SRCDIR = noto-fonts-$(DEB_UPSTREAM_TARBALL_BASENAME)
+
+DEB_UPSTREAM_TARBALL_SRCDIR += $(if \
+ $(filter $(DEB_UPSTREAM_PACKAGE)-%,$(DEB_UPSTREAM_TARBALL_BASENAME)),\
+  $(error set DEB_UPSTREAM_TARBALL_BASENAME to commit hash))
+
+DEB_INSTALL_DOCS_ALL += README.md FAQ.md FAQ-KR.md NEWS.md
+
+# resolve font facts and encode for control file (see deb-substvars(5) )
+substvars-list-encode = perl -0 -F/\\n/ -ane 'print " * ", join("\$${Newline} * ",@F)'
+
+# Generate fonts list
+weights = Black ExtraBold Bold SemiBold Neutral Medium Light ExtraLight Thin
+weights += Extrabold Semibold Extralight
+weights := $(weights) $(patsubst %,%Italic,$(weights))
+weights := $(weights) $(foreach distortion,ExtraCondensed Condensed SemiCondensed,\
+ $(patsubst %,$(distortion)%,$(weights)))
+weights := $(patsubst Neutral,Regular,$(weights))
+weights := $(subst Neutral,,$(weights))
+weights-core = Bold BoldItalic Italic Regular
+weights-extra = $(filter-out $(weights-core),$(weights))
+filter-core = $(foreach weight,$(weights-core),%-$(weight).ttf)
+filter-mono = $(foreach stem,SansMono,$(foreach weight,$(weights-core),%/Noto$(stem)-$(weight).ttf))
+filter-extra = $(foreach weight,$(weights-extra),%-$(weight).ttf)
+filter-core-ui = $(subst %,%UI,$(filter-core))
+filter-extra-ui = $(subst %,%UI,$(filter-extra))
+_filters = $(filter $(filter-$(1)),\
+ $(filter-out $(foreach exception,$(2),$(filter-$(exception))),$(3)))
+fonts-hinted-all = $(wildcard hinted/ttf/*/Noto*.ttf)
+fonts-unhinted-all = $(wildcard unhinted/ttf/*/Noto*.ttf)
+fonts-ui-core = $(call _filters,core-ui,,$(fonts-hinted-all))
+fonts-ui-extra = $(call _filters,extra-ui,,$(fonts-hinted-all))
+fonts-core = $(call _filters,core,mono core-ui,$(fonts-hinted-all))
+fonts-mono = $(call _filters,mono,extra,$(fonts-hinted-all))
+fonts-extra = $(call _filters,extra,extra-ui,$(fonts-hinted-all))
+fonts-croscore = $(wildcard $(foreach stem,Arimo Cousine Tinos,hinted/ttf/$(stem)/$(stem)*.ttf))
+fonts-shipped-noto = $(fonts-core) $(fonts-extra) $(fonts-mono)
+fonts-shipped-all = $(fonts-shipped-noto) $(fonts-ui-core) $(fonts-ui-extra) $(fonts-croscore) $(fonts-unhinted-all)
+fonts-nothinted = $(filter-out $(subst hinted,unhinted,$(fonts-shipped-all)),$(fonts-unhinted-all))
+fonts-missed = $(filter-out $(notdir $(fonts-shipped-all)),$(notdir $(fonts-hinted-all) $(fonts-unhinted-all)))
+
+$(if $(fonts-missed),$(warning Fonts missed in Debian packaging: $(fonts-missed)))
+
+# use unhinted fonts in udeb, and split by what debian-installer needs
+fonts-udeb-di = $(filter \
+ unhinted/ttf/NotoSansSinhala/NotoSansSinhala-Bold.ttf \
+ unhinted/ttf/NotoSansSinhala/NotoSansSinhala-Regular.ttf \
+ unhinted/ttf/NotoSerifGujarati/NotoSerifGujarati-Bold.ttf \
+ unhinted/ttf/NotoSerifGujarati/NotoSerifGujarati-Regular.ttf \
+ ,$(call _filters,core,core-ui,$(fonts-unhinted-all)))
+fonts-udeb-extra = $(call _filters,core,core-ui,$(fonts-unhinted-all))
+
+fonts-scriptcount = $(shell \
+ otfinfo -s $(fonts-shipped-noto) \
+ | perl -n \
+  -e 's/^.*\t+//;' \
+  -e 's, ?(/|Default|<unknown|v\.2|\(.*\)).*,,;' \
+  -e 's,^([^/]+)/\1,$1,;' \
+  -e '/./ and print;' \
+ | sort -u \
+ | grep -c .)
+
+# Install fonts
+# TODO: add nothinted when non-empty - and then update long description
+flavors = core mono extra ui-core ui-extra udeb-di udeb-extra
+DEB_DH_INSTALL_ARGS_$(pkg-croscore) = $(fonts-croscore) usr/share/fonts/truetype/croscore/
+define _installvar =
+DEB_DH_INSTALL_ARGS_$$(pkg-$(1)) = $$(fonts-$(1)) usr/share/fonts/truetype/noto/
+endef
+$(foreach flavor,$(flavors),\
+ $(eval $(call _installvar,$(flavor))))
+
+# install bug-* files into all binary packages
+DEB_DH_BUGFILES_ARGS_ALL = --all
+
+# resolve scriptcount and familylist for long descriptions
+DEB_DH_GENCONTROL_ARGS_ALL = -- -Vfonts:scriptcount="$(fonts-scriptcount)"
+define _listvar =
+install/$$(pkg-$(1))::
+	printf fonts:familylist= \
+		>> debian/$$(cdbs_curpkg).substvars
+	otfinfo -a $$(fonts-$(1)) | cut -d: -f2 \
+		| LC_ALL=C sort -u \
+		| $$(substvars-list-encode) \
+		>> debian/$$(cdbs_curpkg).substvars
+endef
+$(foreach flavor,core extra ui-core ui-extra nothinted,\
+ $(eval $(call _listvar,$(flavor))))

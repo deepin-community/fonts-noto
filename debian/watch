@@ -1,0 +1,10 @@
+version=4
+# check: uscan --report
+# update: gbp import-orig --upstream-vcs-tag=deadbeef ../fonts-noto_YYYYMMDD.orig.tar.gz
+# See also <README.source>
+
+opts="dversionmangle=s/~dfsg\d*$//, \
+ uversionmangle=s/^(\d{4})-(\d{2})-(\d{2}).*/$1$2$3/, \
+ filenamemangle=s%(?:.*?/)?v?(@ANY_VERSION@@ARCHIVE_EXT@)%@PACKAGE@-$1%" \
+ https://github.com/googlei18n/noto-fonts/tags \
+ (?:.*?/)?v?@ANY_VERSION@@ARCHIVE_EXT@

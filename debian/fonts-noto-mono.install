@@ -1,0 +1,2 @@
+debian/NotoMono/NotoMono-Regular.ttf usr/share/fonts/truetype/noto/
+debian/conf.avail/30-droid-noto-mono.conf etc/fonts/conf.avail/
